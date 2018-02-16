@@ -1,7 +1,7 @@
 {
   "name": "bmanbuild",
   "version": "1.0.0",
-  "description": "BMan, but with building",
+  "description": "Shoot'n'Build",
   "main": "main.js",
   "scripts": {
     "start": "electron ."
@@ -11,7 +11,7 @@
     "Electron"
   ],
   "author": "RepComm",
-  "license": "Creative Commons Attribution-NonCommercial 3.0 Unported",
+  "license": "",
   "devDependencies": {
     "electron": "~1.7.8"
   }
