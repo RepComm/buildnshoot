@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>BMan Build</title>
-  </head>
-  <body>
-    <script>
-      require('./renderer.js')
-    </script>
-    
-    
-  </body>
+    <head>
+        <meta charset="UTF-8">
+        <title>BMan Build</title>
+        <style>
+        #render_container {
+            position:absolute;
+            top:0%;
+            left:0%;
+            width:100vw;
+            height:100vh;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="render_container"></div>
+
+        <script>
+        require('./renderer.js')
+        </script>
+        <script type="text/JavaScript" src="res/scripts/p5.js">
+        </script>
+
+        <script type="text/JavaScript" src="res/scripts/utils.js">
+        </script>
+        <script type="text/JavaScript" src="res/scripts/blocks.js">
+        </script>
+        <script type="text/JavaScript" src="res/scripts/blockreference.js">
+        </script>
+        <script type="text/JavaScript" src="res/scripts/chunk.js">
+        </script>
+
+        <script type="text/JavaScript" src="res/scripts/client.js">
+        </script>
+    </body>
 </html>
