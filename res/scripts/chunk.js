@@ -97,5 +97,5 @@ Chunk.prototype.pixelWidth = Chunk.prototype.width * Chunk.prototype.blockWidth;
 Chunk.prototype.pixelHeight = Chunk.prototype.height * Chunk.prototype.blockHeight;
 
 //Chunk DRAWN pixel width/height
-Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth*4;
-Chunk.prototype.drawnPixelHeight = Chunk.prototype.pixelHeight*4;
+Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth;
+Chunk.prototype.drawnPixelHeight = Chunk.prototype.pixelHeight;
