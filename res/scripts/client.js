@@ -1,13 +1,13 @@
 //http://spasmangames.com/boringman/ is the original
 
 let loadedChunks = [];
-window.loadedChunks = loadedChunks;
 
 let nightColor;
 let dayColor;
 let amount = 0; //0, 1
 let direction = false;
 let dayCycleAmount = 0.001;
+let cam;
 
 function preload () {
     //Load the texture map for our blocks
@@ -15,6 +15,41 @@ function preload () {
 }
 
 function setup () {
+    cam = new Camera();
+    window.cam = cam;
+    Input.init();
+
+    document.addEventListener("click", (evt)=> {
+        let worldPixelX = (evt.clientX - cam.x) / World.drawScale;
+        let worldPixelY = (evt.clientY - cam.y) / World.drawScale;
+        
+        let worldBlockX = worldPixelX / Chunk.prototype.blockWidth;
+        let worldBlockY = worldPixelY / Chunk.prototype.blockHeight;
+
+        let chunkX = Math.floor( worldBlockX / Chunk.prototype.width );
+        let chunkY = Math.floor( worldBlockY / Chunk.prototype.height );
+
+        let chunkBlockX = worldBlockX - (chunkX*Chunk.prototype.blockWidth*Chunk.prototype.width);
+        let chunkBlockY = worldBlockY - (chunkY*Chunk.prototype.blockHeight*Chunk.prototype.height);
+
+        console.log(Math.floor(chunkBlockX), Math.floor(chunkBlockY));
+
+        let chunk;
+        for (let i=0; i<loadedChunks.length; i++) {
+            chunk = loadedChunks[i];
+            if (chunk.x == chunkX && chunk.y == chunkY) {
+                console.log(chunk);
+                chunk.setBlockAndUpdate(
+                    Math.floor(chunkBlockX),
+                    Math.floor(chunkBlockY),
+                    2
+                );
+                break;
+            }
+        }
+
+    });
+
     let winRect = document.getElementById("render_container").getBoundingClientRect();
     let canv = createCanvas(winRect.width, winRect.height);
     canv.parent("render_container");
@@ -42,9 +77,9 @@ function setup () {
                 
                 for (let y=0; y<Chunk.prototype.height; y++) {
                     if (y==0 || x == 0) {
-                        c.setBlock(x, y, grassBlockRefId);
+                        c.setBlock(x, y, 0);
                     } else {
-                        c.setBlock(x, y, dirtBlockRefId);
+                        c.setBlock(x, y, 0);
                     }
                 }
             }
@@ -55,7 +90,24 @@ function setup () {
     }
 }
 
+function windowResized() {
+    let winRect = document.getElementById("render_container").getBoundingClientRect();
+    resizeCanvas(winRect.width, winRect.height);
+}
+
 function draw () {
+    if (Input.isPressed("a")) {
+        cam.x+=0.5*World.drawScale;
+    } else if (Input.isPressed("d")) {
+        cam.x-=0.5*World.drawScale;
+    }
+    if (Input.isPressed("w")) {
+        cam.y+=0.5*World.drawScale;
+    } else if (Input.isPressed("s")) {
+        cam.y-=0.5*World.drawScale;
+    }
+    push();
+    translate(cam.x, cam.y);
     if (amount > 0.99) {
         direction = true; //Go back
     } else if (amount < 0.11) {
@@ -83,4 +135,5 @@ function draw () {
             pop();
         } //TODO handle chunks being undefined
     }
+    pop();
 }

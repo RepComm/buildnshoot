@@ -18,7 +18,7 @@ class Chunk {
     }
 
     calculatePixels () {
-        
+        console.log("updating pixels");
         if (!Blocks.prototype.textureMap) {
             throw "No texture map is loaded! Use Blocks.loadTextureMap(fname); before calculating pixels!";
         }
@@ -36,7 +36,7 @@ class Chunk {
                 blockTypeId = this.data[i];
 
                 if (blockTypeId === 0) {
-                    continue;
+                    continue; //TODO erase this block's pixels
                 }
 
                 //Get the block's render instructions given its id
@@ -96,6 +96,9 @@ Chunk.prototype.blockHeight = 16;
 Chunk.prototype.pixelWidth = Chunk.prototype.width * Chunk.prototype.blockWidth;
 Chunk.prototype.pixelHeight = Chunk.prototype.height * Chunk.prototype.blockHeight;
 
+let World = {};
+World.drawScale = 4;
+
 //Chunk DRAWN pixel width/height
-Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth;
-Chunk.prototype.drawnPixelHeight = Chunk.prototype.pixelHeight;
+Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth*World.drawScale;
+Chunk.prototype.drawnPixelHeight = Chunk.prototype.pixelHeight*World.drawScale;
