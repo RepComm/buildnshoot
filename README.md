@@ -4,4 +4,4 @@
 
 TODO: Write readme later
 
-[![Alt text](https://img.youtube.com/vi/cvwUO5lDTiU/0.jpg)](https://www.youtube.com/watch?v=cvwUO5lDTiU)
+[![Alt text](https://img.youtube.com/vi/8r36ptOeWuw/0.jpg)](www.youtube.com/watch?v=8r36ptOeWuw)

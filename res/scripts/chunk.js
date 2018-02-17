@@ -7,6 +7,8 @@ class Chunk {
         this.x = (x || 0);
         this.y = (y || 0);
 
+        this.collideData = undefined;
+
         //Block data, Unsigned Short (2 bytes), 65535 combinations
         this.data = new Uint16Array(Chunk.prototype.width * Chunk.prototype.height);
 
@@ -34,30 +36,11 @@ class Chunk {
             for (let yi=0; yi<Chunk.prototype.height;yi++) {
                 //Get the data index (1d array) given 2d coordinates
                 i = Utils.TwoDimToIndex(xi, yi, Chunk.prototype.width);
-
                 //Grab the block's type id (what type of block it is)
                 blockTypeId = this.data[i];
-
                 //Get the block's render instructions given its id
                 ref = Blocks.getRef(blockTypeId);
-                if (ref !== undefined) { //If reference is undefined, then the block isn't registered
-                    /*this.image.blend(
-                        //Texture map to use (contains all of the blocks in one image)
-                        Blocks.prototype.textureMap,
-                        //Where to copy pixels from in the texture map
-                        ref.imageMinX,
-                        ref.imageMinY,
-                        //Size to copy from texture map (always block size)
-                        Chunk.prototype.blockWidth,
-                        Chunk.prototype.blockHeight,
-                        //Where to draw the block at in this chunk/image
-                        xi*Chunk.prototype.blockWidth,
-                        yi*Chunk.prototype.blockHeight,
-                        //Size to draw (always block size)
-                        Chunk.prototype.blockWidth,
-                        Chunk.prototype.blockHeight,
-                        REPLACE
-                    );*/
+                if (ref !== undefined) {
                     this.image.copy(
                         //Texture map to use (contains all of the blocks in one image)
                         Blocks.prototype.textureMap,
@@ -75,7 +58,7 @@ class Chunk {
                         Chunk.prototype.blockHeight
                     );
                 } else {
-                    throw "Ref undefined";
+                    throw blockTypeId +" is not a registered block";
                 }
             }
         }
@@ -84,9 +67,16 @@ class Chunk {
     setBlock (x, y, id) {
         if (typeof (x) !== "number") throw "x must be an integer";
         if (typeof (y) !== "number") throw "y must be an integer";
-        if (typeof (id) !== "number") throw "id must be an integer";
-        if (id < 0 || id > 65535) throw "id must be integer between 0 and 65535";
-        this.data[ Utils.TwoDimToIndex(x, y, Chunk.prototype.width) ] = id;
+        if (typeof (id) !== "number") {
+            if (typeof(id) !== "string") {
+                throw "id must be an integer id or string name";
+            } else {
+                this.data[ Utils.TwoDimToIndex(x, y, Chunk.prototype.width) ] = Blocks.prototype.byName[id];
+            }
+        } else {
+            if (id < 0 || id > 65535) throw "id must be integer between 0 and 65535";
+            this.data[ Utils.TwoDimToIndex(x, y, Chunk.prototype.width) ] = id;
+        }
     }
 
     setBlockAndUpdate (x, y, id) {
