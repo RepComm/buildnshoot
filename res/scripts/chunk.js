@@ -18,7 +18,6 @@ class Chunk {
     }
 
     calculatePixels () {
-        console.log("updating pixels");
         if (!Blocks.prototype.textureMap) {
             throw "No texture map is loaded! Use Blocks.loadTextureMap(fname); before calculating pixels!";
         }
@@ -26,6 +25,10 @@ class Chunk {
         let i;
         let ref;
         let blockTypeId;
+
+        this.image.loadPixels();
+        this.image.pixels.fill(0);
+        this.image.updatePixels();
 
         for (let xi=0; xi<Chunk.prototype.width;xi++) {
             for (let yi=0; yi<Chunk.prototype.height;yi++) {
@@ -35,14 +38,26 @@ class Chunk {
                 //Grab the block's type id (what type of block it is)
                 blockTypeId = this.data[i];
 
-                if (blockTypeId === 0) {
-                    continue; //TODO erase this block's pixels
-                }
-
                 //Get the block's render instructions given its id
                 ref = Blocks.getRef(blockTypeId);
-
-                if (ref) { //If reference is undefined, then the block isn't registered
+                if (ref !== undefined) { //If reference is undefined, then the block isn't registered
+                    /*this.image.blend(
+                        //Texture map to use (contains all of the blocks in one image)
+                        Blocks.prototype.textureMap,
+                        //Where to copy pixels from in the texture map
+                        ref.imageMinX,
+                        ref.imageMinY,
+                        //Size to copy from texture map (always block size)
+                        Chunk.prototype.blockWidth,
+                        Chunk.prototype.blockHeight,
+                        //Where to draw the block at in this chunk/image
+                        xi*Chunk.prototype.blockWidth,
+                        yi*Chunk.prototype.blockHeight,
+                        //Size to draw (always block size)
+                        Chunk.prototype.blockWidth,
+                        Chunk.prototype.blockHeight,
+                        REPLACE
+                    );*/
                     this.image.copy(
                         //Texture map to use (contains all of the blocks in one image)
                         Blocks.prototype.textureMap,
@@ -97,7 +112,7 @@ Chunk.prototype.pixelWidth = Chunk.prototype.width * Chunk.prototype.blockWidth;
 Chunk.prototype.pixelHeight = Chunk.prototype.height * Chunk.prototype.blockHeight;
 
 let World = {};
-World.drawScale = 4;
+World.drawScale = 3;
 
 //Chunk DRAWN pixel width/height
 Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth*World.drawScale;

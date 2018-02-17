@@ -8,6 +8,10 @@ let amount = 0; //0, 1
 let direction = false;
 let dayCycleAmount = 0.001;
 let cam;
+let currentBlockRefId = 3;
+window.setBlockRef = function(id) {
+    currentBlockRefId = id;
+}
 
 function preload () {
     //Load the texture map for our blocks
@@ -19,37 +23,6 @@ function setup () {
     window.cam = cam;
     Input.init();
 
-    document.addEventListener("click", (evt)=> {
-        let worldPixelX = (evt.clientX - cam.x) / World.drawScale;
-        let worldPixelY = (evt.clientY - cam.y) / World.drawScale;
-        
-        let worldBlockX = worldPixelX / Chunk.prototype.blockWidth;
-        let worldBlockY = worldPixelY / Chunk.prototype.blockHeight;
-
-        let chunkX = Math.floor( worldBlockX / Chunk.prototype.width );
-        let chunkY = Math.floor( worldBlockY / Chunk.prototype.height );
-
-        let chunkBlockX = worldBlockX - (chunkX*Chunk.prototype.blockWidth*Chunk.prototype.width);
-        let chunkBlockY = worldBlockY - (chunkY*Chunk.prototype.blockHeight*Chunk.prototype.height);
-
-        console.log(Math.floor(chunkBlockX), Math.floor(chunkBlockY));
-
-        let chunk;
-        for (let i=0; i<loadedChunks.length; i++) {
-            chunk = loadedChunks[i];
-            if (chunk.x == chunkX && chunk.y == chunkY) {
-                console.log(chunk);
-                chunk.setBlockAndUpdate(
-                    Math.floor(chunkBlockX),
-                    Math.floor(chunkBlockY),
-                    2
-                );
-                break;
-            }
-        }
-
-    });
-
     let winRect = document.getElementById("render_container").getBoundingClientRect();
     let canv = createCanvas(winRect.width, winRect.height);
     canv.parent("render_container");
@@ -60,26 +33,31 @@ function setup () {
     noSmooth();
 
     //Register some blocks
-    let grassBlockRef = new BlockReference("grass", 16, 0, "Grass Block");
-    let grassBlockRefId = 1; //Between 0 and 65535
-    Blocks.registerBlockReference(grassBlockRef, grassBlockRefId);
+    let airBlockRef = new BlockReference("air", 0, 0, "Air Block");
+    let airBlockRefId = 3; //Between 0 and 65535
+    Blocks.registerBlockReference(airBlockRef, airBlockRefId);
 
-    let dirtBlockRef = new BlockReference("dirt", 0, 0, "Dirt Block");
-    let dirtBlockRefId = 2; //Between 0 and 65535
+    let dirtBlockRef = new BlockReference("dirt", 16, 0, "Dirt Block");
+    let dirtBlockRefId = 1; //Between 0 and 65535
     Blocks.registerBlockReference(dirtBlockRef, dirtBlockRefId);
 
+    let grassBlockRef = new BlockReference("grass", 32, 0, "Grass Block");
+    let grassBlockRefId = 2; //Between 0 and 65535
+    Blocks.registerBlockReference(grassBlockRef, grassBlockRefId);
+
     for (let i=0; i<2; i++) {
-        for (let j=0; j<2; j++) {
+        for (let j=0; j<1; j++) {
             let c = new Chunk(i, j);
             loadedChunks.push(c);
 
             for (let x=0; x<Chunk.prototype.width; x++) {
-                
                 for (let y=0; y<Chunk.prototype.height; y++) {
-                    if (y==0 || x == 0) {
-                        c.setBlock(x, y, 0);
+                    if (y < 2) {
+                        c.setBlock(x, y, airBlockRefId);
+                    } else if (y == 2) {
+                        c.setBlock(x, y, grassBlockRefId);
                     } else {
-                        c.setBlock(x, y, 0);
+                        c.setBlock(x, y, dirtBlockRefId);
                     }
                 }
             }
@@ -88,6 +66,36 @@ function setup () {
 
         }
     }
+
+    document.addEventListener("click", (evt)=> {
+        let worldPixelX = (evt.clientX - cam.x) / World.drawScale;
+        let worldPixelY = (evt.clientY - cam.y) / World.drawScale;
+        
+        let worldBlockX = worldPixelX / Chunk.prototype.blockWidth;
+        let worldBlockY = worldPixelY / Chunk.prototype.blockHeight;
+
+        let chunkX = Math.floor( worldBlockX / Chunk.prototype.width );
+        let chunkY = Math.floor( worldBlockY / Chunk.prototype.height );
+
+        let chunkBlockX = worldBlockX - (chunkX*Chunk.prototype.width);
+        let chunkBlockY = worldBlockY - (chunkY*Chunk.prototype.height);
+
+        //console.log(Math.floor(chunkBlockX), Math.floor(chunkBlockY));
+
+        let chunk;
+        for (let i=0; i<loadedChunks.length; i++) {
+            chunk = loadedChunks[i];
+            if (chunk.x == chunkX && chunk.y == chunkY) {
+                chunk.setBlockAndUpdate(
+                    Math.floor(chunkBlockX),
+                    Math.floor(chunkBlockY),
+                    currentBlockRefId
+                );
+                break;
+            }
+        }
+
+    });
 }
 
 function windowResized() {
