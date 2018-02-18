@@ -58,18 +58,23 @@ Blocks.prototype.textureMap = undefined;
 function registerBlocks () {
 
     Blocks.registerBlockReference(
-        new BlockReference("air", 0, 0, "Air Block"),
+        new BlockReference("air", -1, -1, "Air Block"),
         0 //Between 0 and 65535
     );
 
     Blocks.registerBlockReference(
-        new BlockReference("dirt", 16, 0, "Dirt Block"),
+        new BlockReference("dirt", 0, 0, "Dirt Block"),
         1
     );
 
     Blocks.registerBlockReference(
-        new BlockReference("grass", 32, 0, "Grass Block"),
+        new BlockReference("grass", 16, 0, "Grass Block"),
         2
+    );
+
+    Blocks.registerBlockReference(
+        new BlockReference("stone", 32, 0, "Stone Block"),
+        3
     );
 
 }

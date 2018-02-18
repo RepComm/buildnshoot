@@ -9,7 +9,7 @@ let direction = false;
 let dayCycleAmount = 0.001;
 let cam;
 let inventorySelectedSlot = 0;
-let inventory = ["grass", "dirt"];
+let inventory = ["grass", "dirt", "stone"];
 //'background-image':"url(" + Canvas.toDataURL("image/png")+ ")";
 
 window.setBlockRef = function(id) {
@@ -58,18 +58,34 @@ function setup () {
     noSmooth();
 
     for (let i=0; i<2; i++) {
-        for (let j=0; j<1; j++) {
+        for (let j=0; j<3; j++) {
             let c = new Chunk(i, j);
             loadedChunks.push(c);
 
             for (let x=0; x<Chunk.prototype.width; x++) {
                 for (let y=0; y<Chunk.prototype.height; y++) {
-                    if (y < 2) {
-                        c.setBlock(x, y, "air");
-                    } else if (y == 2) {
-                        c.setBlock(x, y, "grass");
+                    if (j === 0) {
+                        if (y < 2) {
+                            c.setBlock(x, y, "air");
+                        } else if (y == 2) {
+                            c.setBlock(x, y, "grass");
+                        } else if (y > 4) {
+                            if (Math.random() > 0.68) {
+                                c.setBlock(x, y, "stone");
+                            } else {
+                                c.setBlock(x, y, "dirt");
+                            }
+                        } else {
+                            c.setBlock(x, y, "dirt");
+                        }
+                    } else if (j === 1) {
+                        if (Math.random() > 0.23) {
+                            c.setBlock(x, y, "stone");
+                        } else {
+                            c.setBlock(x, y, "dirt");
+                        }
                     } else {
-                        c.setBlock(x, y, "dirt");
+                        c.setBlock(x, y, "stone");
                     }
                 }
             }

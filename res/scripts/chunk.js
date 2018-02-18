@@ -24,44 +24,66 @@ class Chunk {
             throw "No texture map is loaded! Use Blocks.loadTextureMap(fname); before calculating pixels!";
         }
 
-        let i;
-        let ref;
-        let blockTypeId;
-
-        this.image.loadPixels();
-        this.image.pixels.fill(0);
-        this.image.updatePixels();
+        this.clearPixels();
 
         for (let xi=0; xi<Chunk.prototype.width;xi++) {
             for (let yi=0; yi<Chunk.prototype.height;yi++) {
-                //Get the data index (1d array) given 2d coordinates
-                i = Utils.TwoDimToIndex(xi, yi, Chunk.prototype.width);
-                //Grab the block's type id (what type of block it is)
-                blockTypeId = this.data[i];
-                //Get the block's render instructions given its id
-                ref = Blocks.getRef(blockTypeId);
-                if (ref !== undefined) {
-                    this.image.copy(
-                        //Texture map to use (contains all of the blocks in one image)
-                        Blocks.prototype.textureMap,
-                        //Where to copy pixels from in the texture map
-                        ref.imageMinX,
-                        ref.imageMinY,
-                        //Size to copy from texture map (always block size)
-                        Chunk.prototype.blockWidth,
-                        Chunk.prototype.blockHeight,
-                        //Where to draw the block at in this chunk/image
-                        xi*Chunk.prototype.blockWidth,
-                        yi*Chunk.prototype.blockHeight,
-                        //Size to draw (always block size)
-                        Chunk.prototype.blockWidth,
-                        Chunk.prototype.blockHeight
-                    );
-                } else {
-                    throw blockTypeId +" is not a registered block";
-                }
+                this.calculateBlockPixels(xi, yi);
             }
         }
+    }
+
+    calculateBlockPixels (x, y) {
+        let i = Utils.TwoDimToIndex(x, y, Chunk.prototype.width);
+        //Grab the block's type id (what type of block it is)
+        let blockTypeId = this.data[i];
+
+        if (blockTypeId === 0) {
+            return; //We already cleared the air block (probably..)
+        }
+
+        //Get the block's render instructions given its id
+        let ref = Blocks.getRef(blockTypeId);
+        if (ref !== undefined) {
+            this.image.copy(
+                //Texture map to use (contains all of the blocks in one image)
+                Blocks.prototype.textureMap,
+                //Where to copy pixels from in the texture map
+                ref.imageMinX,
+                ref.imageMinY,
+                //Size to copy from texture map (always block size)
+                Chunk.prototype.blockWidth,
+                Chunk.prototype.blockHeight,
+                //Where to draw the block at in this chunk/image
+                x*Chunk.prototype.blockWidth,
+                y*Chunk.prototype.blockHeight,
+                //Size to draw (always block size)
+                Chunk.prototype.blockWidth,
+                Chunk.prototype.blockHeight
+            );
+        } else {
+            throw blockTypeId +" is not a registered block";
+        }
+    }
+
+    clearPixels () {
+        this.image.loadPixels();
+        this.image.pixels.fill(0);
+        this.image.updatePixels();
+    }
+
+    clearBlockPixels (x, y) {
+        this.image.loadPixels();
+        for (let xi=x*Chunk.prototype.blockWidth; xi<(x*Chunk.prototype.blockWidth)+Chunk.prototype.blockWidth; xi++) {
+            for (let yi=y*Chunk.prototype.blockHeight; yi<(y*Chunk.prototype.blockHeight)+Chunk.prototype.blockHeight; yi++) {
+                /*Not the most efficient method,
+                but we'll fix it later,
+                and its still more efficient than calculating the whole chunk again.
+                */
+                this.image.set(xi, yi, color(255,255,255,0));
+            }
+        }
+        this.image.updatePixels();
     }
 
     setBlock (x, y, id) {
@@ -80,8 +102,9 @@ class Chunk {
     }
 
     setBlockAndUpdate (x, y, id) {
+        this.clearBlockPixels(x, y);
         this.setBlock(x, y, id);
-        this.calculatePixels();
+        this.calculateBlockPixels(x, y);
     }
 
     draw () {
