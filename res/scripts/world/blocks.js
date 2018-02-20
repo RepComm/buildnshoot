@@ -1,4 +1,3 @@
-
 /* //Usage
 
 let grassBlockRef = new BlockReference("grass", 0, 0, "Grass Block");
@@ -12,6 +11,9 @@ Blocks.registerBlockReference(grassBlockRef, 12);
  * There are 65535 possible unique block types
  * The limit is not built into Blocks class, but instead limited to UInt16Array in each chunk instance
 */
+
+const BlockReference = require("./blockreference.js");
+
 class Blocks {
     constructor () {
         throw "Should not instantiate Blocks class!";
@@ -80,3 +82,5 @@ function registerBlocks () {
 }
 
 registerBlocks();
+
+module.exports = Blocks;

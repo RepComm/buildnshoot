@@ -27,3 +27,5 @@ let Utils = {
         return index / width;
     }
 };
+
+module.exports = Utils;

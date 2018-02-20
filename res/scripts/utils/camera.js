@@ -5,3 +5,5 @@ class Camera {
         this.y = 0;
     }
 }
+
+module.exports = Camera;

@@ -19,27 +19,17 @@
     <body>
         <div id="render_container"></div>
 
-        <script>
-        require('./renderer.js')
+        <script type="text/JavaScript">
+            require('./renderer.js')
         </script>
+
         <script type="text/JavaScript" src="res/scripts/p5.js">
         </script>
         <script type="text/JavaScript" src="res/scripts/p5.collide2d.js">
         </script>
-
-        <script type="text/JavaScript" src="res/scripts/utils.js">
-        </script>
-        <script type="text/JavaScript" src="res/scripts/blockreference.js">
-        </script>
-        <script type="text/JavaScript" src="res/scripts/blocks.js">
-        </script>
-        <script type="text/JavaScript" src="res/scripts/chunk.js">
-        </script>
-        <script type="text/JavaScript" src="res/scripts/input.js">
-        </script>
-        <script type="text/JavaScript" src="res/scripts/camera.js">
-        </script>
-        <script type="text/JavaScript" src="res/scripts/client.js">
+        
+        <script type="text/JavaScript">
+            require("./res/scripts/client.js");
         </script>
     </body>
 </html>

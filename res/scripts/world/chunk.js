@@ -1,5 +1,6 @@
 
-const path = require("path");
+const Blocks = require("./blocks.js");
+const Utils = require("../utils/utils.js");
 
 class Chunk {
     constructor (x, y) {
@@ -126,7 +127,10 @@ Chunk.prototype.pixelHeight = Chunk.prototype.height * Chunk.prototype.blockHeig
 
 let World = {};
 World.drawScale = 3;
+window.World = World;
 
 //Chunk DRAWN pixel width/height
 Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth*World.drawScale;
 Chunk.prototype.drawnPixelHeight = Chunk.prototype.pixelHeight*World.drawScale;
+
+module.exports = Chunk;

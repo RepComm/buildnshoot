@@ -1,5 +1,10 @@
 //http://spasmangames.com/boringman/ is the original
 
+const Chunk = require("./world/chunk.js");
+const Blocks = require("./world/blocks.js");
+const Camera = require("./utils/camera.js");
+const Input = require("./utils/input.js");
+
 let loadedChunks = [];
 
 let nightColor;
@@ -10,7 +15,6 @@ let dayCycleAmount = 0.001;
 let cam;
 let inventorySelectedSlot = 0;
 let inventory = ["grass", "dirt", "stone"];
-//'background-image':"url(" + Canvas.toDataURL("image/png")+ ")";
 
 window.setBlockRef = function(id) {
     currentBlockRefId = id;
@@ -43,10 +47,13 @@ function preload () {
     Blocks.loadTextureMap("res/textures/blocks.png");
 }
 
+window.preload = preload;
+
 function setup () {
     cam = new Camera();
-    window.cam = cam;
     Input.init();
+
+    cursor(CROSS);
 
     let winRect = document.getElementById("render_container").getBoundingClientRect();
     let canv = createCanvas(winRect.width, winRect.height);
@@ -58,28 +65,26 @@ function setup () {
     noSmooth();
 
     for (let i=0; i<2; i++) {
-        for (let j=0; j<3; j++) {
+        for (let j=0; j<4; j++) {
             let c = new Chunk(i, j);
             loadedChunks.push(c);
 
             for (let x=0; x<Chunk.prototype.width; x++) {
                 for (let y=0; y<Chunk.prototype.height; y++) {
                     if (j === 0) {
+
+                    } else if (j === 1) {
                         if (y < 2) {
                             c.setBlock(x, y, "air");
                         } else if (y == 2) {
                             c.setBlock(x, y, "grass");
                         } else if (y > 4) {
-                            if (Math.random() > 0.68) {
-                                c.setBlock(x, y, "stone");
-                            } else {
-                                c.setBlock(x, y, "dirt");
-                            }
+                            c.setBlock(x, y, "dirt");
                         } else {
                             c.setBlock(x, y, "dirt");
                         }
-                    } else if (j === 1) {
-                        if (Math.random() > 0.23) {
+                    } else if (j === 2) {
+                        if ( Math.random() < y / Chunk.prototype.height ) {
                             c.setBlock(x, y, "stone");
                         } else {
                             c.setBlock(x, y, "dirt");
@@ -181,10 +186,14 @@ function setup () {
     });
 }
 
+window.setup = setup;
+
 function windowResized() {
     let winRect = document.getElementById("render_container").getBoundingClientRect();
     resizeCanvas(winRect.width, winRect.height);
 }
+
+window.windowResized = windowResized;
 
 function draw () {
     if (Input.isPressed("a")) {
@@ -231,11 +240,11 @@ function draw () {
     noFill();
     stroke(0);
 
-    textSize(10);
+    textSize(12);
     text(
         mousePos.posStr,
         mousePos.worldPixelX*World.drawScale,
-        mousePos.worldPixelY*World.drawScale
+        mousePos.worldPixelY*World.drawScale-2
     );
 
     rect(
@@ -247,3 +256,5 @@ function draw () {
 
     pop();
 }
+
+window.draw = draw;

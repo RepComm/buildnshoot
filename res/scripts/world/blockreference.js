@@ -9,3 +9,5 @@ class BlockReference {
         this.collision = collision;
     }
 }
+
+module.exports = BlockReference;

@@ -15,3 +15,5 @@ let Input = {
         return this.keys[key];
     }
 };
+
+module.exports = Input;
