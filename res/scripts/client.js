@@ -4,6 +4,7 @@ const Chunk = require("./world/chunk.js");
 const Blocks = require("./world/blocks.js");
 const Camera = require("./utils/camera.js");
 const Input = require("./utils/input.js");
+const Player = require("./entity/player.js");
 
 let loadedChunks = [];
 
@@ -16,13 +17,15 @@ let cam;
 let inventorySelectedSlot = 0;
 let inventory = ["grass", "dirt", "stone"];
 
+let localPlayer;
+
 window.setBlockRef = function(id) {
     currentBlockRefId = id;
 }
 
 let mousePos = {
-    documentX:0,
-    documentY:0,
+    x:0,
+    y:0,
     worldPixelX:0,
     worldPixelY:0,
     worldBlockX:0,
@@ -42,6 +45,19 @@ let selection = {
     chunk:undefined
 };
 
+function updateBlockSelect () {
+    mousePos.worldPixelX = (mousePos.x - cam.x) / World.drawScale;
+    mousePos.worldPixelX = mousePos.worldPixelX.roundToBounds(Chunk.prototype.blockWidth);
+
+    mousePos.worldPixelY = (mousePos.y - cam.y) / World.drawScale;
+    mousePos.worldPixelY = mousePos.worldPixelY.roundToBounds(Chunk.prototype.blockHeight);
+
+    mousePos.worldBlockX = mousePos.worldPixelX/Chunk.prototype.blockWidth;
+    mousePos.worldBlockY = mousePos.worldPixelY/Chunk.prototype.blockHeight;
+
+    mousePos.posStr = mousePos.worldBlockX + ", " + mousePos.worldBlockY;
+}
+
 function preload () {
     //Load the texture map for our blocks
     Blocks.loadTextureMap("res/textures/blocks.png");
@@ -50,6 +66,9 @@ function preload () {
 window.preload = preload;
 
 function setup () {
+    localPlayer = new Player();
+    window.localPlayer = localPlayer;
+
     cam = new Camera();
     Input.init();
 
@@ -173,16 +192,7 @@ function setup () {
         mousePos.x = evt.clientX;
         mousePos.y = evt.clientY;
 
-        mousePos.worldPixelX = (mousePos.x - cam.x) / World.drawScale;
-        mousePos.worldPixelX = mousePos.worldPixelX.roundToBounds(Chunk.prototype.blockWidth);
-
-        mousePos.worldPixelY = (mousePos.y - cam.y) / World.drawScale;
-        mousePos.worldPixelY = mousePos.worldPixelY.roundToBounds(Chunk.prototype.blockHeight);
-
-        mousePos.worldBlockX = mousePos.worldPixelX/Chunk.prototype.blockWidth;
-        mousePos.worldBlockY = mousePos.worldPixelY/Chunk.prototype.blockHeight;
-
-        mousePos.posStr = mousePos.worldBlockX + ", " + mousePos.worldBlockY;
+        updateBlockSelect();
     });
 }
 
@@ -198,13 +208,17 @@ window.windowResized = windowResized;
 function draw () {
     if (Input.isPressed("a")) {
         cam.x+=0.5*World.drawScale;
+        updateBlockSelect();
     } else if (Input.isPressed("d")) {
         cam.x-=0.5*World.drawScale;
+        updateBlockSelect();
     }
     if (Input.isPressed("w")) {
         cam.y+=0.5*World.drawScale;
+        updateBlockSelect();
     } else if (Input.isPressed("s")) {
         cam.y-=0.5*World.drawScale;
+        updateBlockSelect();
     }
     push();
     translate(cam.x, cam.y);
@@ -237,9 +251,11 @@ function draw () {
         } //TODO handle chunks being undefined
     }
 
+    localPlayer.render();
+
     noFill();
     stroke(0);
-
+    
     textSize(12);
     text(
         mousePos.posStr,
@@ -247,6 +263,7 @@ function draw () {
         mousePos.worldPixelY*World.drawScale-2
     );
 
+    strokeWeight(World.drawScale);
     rect(
         mousePos.worldPixelX*World.drawScale,
         mousePos.worldPixelY*World.drawScale,
