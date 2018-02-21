@@ -5,6 +5,7 @@ const Blocks = require("./world/blocks.js");
 const Camera = require("./utils/camera.js");
 const Input = require("./utils/input.js");
 const Player = require("./entity/player.js");
+const Utils = require("./utils/utils.js");
 
 let loadedChunks = [];
 
@@ -46,12 +47,16 @@ let selection = {
 };
 
 function updateBlockSelect () {
-    mousePos.worldPixelX = (mousePos.x - cam.x) / World.drawScale;
-    mousePos.worldPixelX = mousePos.worldPixelX.roundToBounds(Chunk.prototype.blockWidth);
+    mousePos.worldPixelX = Utils.roundToNext(
+        (mousePos.x - cam.x) / World.drawScale,
+        Chunk.prototype.blockWidth
+    );
 
-    mousePos.worldPixelY = (mousePos.y - cam.y) / World.drawScale;
-    mousePos.worldPixelY = mousePos.worldPixelY.roundToBounds(Chunk.prototype.blockHeight);
-
+    mousePos.worldPixelY = Utils.roundToNext(
+        (mousePos.y - cam.y) / World.drawScale,
+        Chunk.prototype.blockHeight
+    );
+    
     mousePos.worldBlockX = mousePos.worldPixelX/Chunk.prototype.blockWidth;
     mousePos.worldBlockY = mousePos.worldPixelY/Chunk.prototype.blockHeight;
 
@@ -167,28 +172,6 @@ function setup () {
         }
         console.log(inventorySelectedSlot, inventory[inventorySelectedSlot]);
     });
-
-    Number.prototype.roundTo = function(num) {
-        var resto = this%num;
-        if (resto <= (num/2)) { 
-            return this-resto;
-        } else {
-            return this+num-resto;
-        }
-    }
-
-    //TODO - DONE - Works for negative block coordinates
-    Number.prototype.roundToBounds = function(num) {
-        let thiz = this;
-        let isNeg = (thiz < 0);
-        if (isNeg) {thiz -= num};
-        let resto = thiz%num;
-        if (resto <= (num)) { 
-            return thiz-resto;
-        } else {
-            return thiz+num-resto;
-        }
-    }
 
     document.addEventListener("mousemove", (evt)=>{
         mousePos.x = evt.clientX;
