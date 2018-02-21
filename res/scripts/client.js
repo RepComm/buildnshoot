@@ -68,6 +68,7 @@ window.preload = preload;
 function setup () {
     localPlayer = new Player();
     window.localPlayer = localPlayer;
+    console.log("Hello World");
 
     cam = new Camera();
     Input.init();
@@ -155,6 +156,7 @@ function setup () {
         evt.preventDefault();
         if (!inventory[inventorySelectedSlot]) return;
         setBlockAtDocumentPixels(evt.clientX, evt.clientY, inventory[inventorySelectedSlot]);
+        console.log("Placing block");
         return false;
     }, false);
 
