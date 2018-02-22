@@ -194,7 +194,7 @@ function setup () {
 window.setup = setup;
 
 function windowResized() {
-    let winRect = document.getElementById("render_container").getBoundingClientRect();
+    winRect = document.getElementById("render_container").getBoundingClientRect();
     resizeCanvas(winRect.width, winRect.height);
 }
 

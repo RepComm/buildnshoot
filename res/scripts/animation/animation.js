@@ -1,5 +1,5 @@
 
-const Clip = require("./clip.js");
+const AnimationClip = require("./animationclip.js");
 
 class Animation {
     constructor (name) {
@@ -15,7 +15,7 @@ class Animation {
         result.clips = [];
 
         for (let i=0; i<clipNames.length; i++) {
-            clip = Clip.fromJsonObject( clipNames[i], jsonObject.clips[clipNames[i]] );
+            clip = AnimationClip.fromJsonObject( clipNames[i], jsonObject.clips[clipNames[i]] );
             result.clips.push(clip);
         }
 

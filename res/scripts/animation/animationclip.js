@@ -1,7 +1,7 @@
 
-const Property = require("./property.js");
+const AnimationProperty = require("./animationproperty.js");
 
-class Clip {
+class AnimationClip {
     constructor (name) {
         this.name = name;
         this.fps = 1;
@@ -10,13 +10,26 @@ class Clip {
     }
 
     static fromJsonObject (name, jsonObject) {
-        let result = new Clip(name);
+        let result = new AnimationClip(name);
         
+        if(jsonObject.loop) {
+            let split = jsonObject.loop.split("-");
+            if (split.length == 1) {
+                result.loop = true;
+                result.loopStart = parseInt(split[0]);
+            } else if (split.length > 1) {
+                result.loop = true;
+                result.loopStart = parseInt(split[0]);
+                result.loopEnd = parseInt(split[1]);
+            }
+        }
+
         let propertyNames = Object.keys(jsonObject).filter(key => {
             switch (key) {
                 case "name":break;
                 case "fps":break;
                 case "interpolate":break;
+                case "loop":break;
                 default:
                     return true;
             }
@@ -26,7 +39,7 @@ class Clip {
         let propertyJson;
         for (let i=0; i<propertyNames.length; i++) {
             result.properties.push(
-                Property.fromJsonObject(
+                AnimationProperty.fromJsonObject(
                     propertyNames[i],
                     jsonObject[
                         propertyNames[i]
@@ -40,4 +53,4 @@ class Clip {
     }
 }
 
-module.exports = Clip;
+module.exports = AnimationClip;

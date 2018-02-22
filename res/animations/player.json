@@ -4,31 +4,26 @@
         "walkLeft":{
             "fps":4,
             "interpolate":true,
+            "loop":"0-1",
             "armLeft":{
-                "loop":"1-2",
                 "rotation":{
-                    "0":0,
-                    "1":-30,
-                    "2":30
+                    "0":-30,
+                    "1":30
                 }
             },
             "forearmLeft":{
-                "loop":"0-1",
                 "rotation":{
                     "0":0,
                     "1":-15
                 }
             },
             "armRight":{
-                "loop":"1-2",
                 "rotation":{
-                    "0":0,
-                    "1":30,
-                    "2":-30
+                    "0":30,
+                    "1":-30
                 }
             },
             "forearmRight":{
-                "loop":"0-1",
                 "rotation":{
                     "0":0,
                     "1":-15
