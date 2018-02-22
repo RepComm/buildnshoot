@@ -34,15 +34,18 @@ class Player extends Entity {
     render () {
         push();
 
-        noFill();
-        strokeWeight(this.drawLineWidth);
-        stroke(this.mainColor);
-
         //Move to the player's position
         translate(this.position.x, this.position.y);
 
+        noStroke();
+        fill(this.mainColor);
+
         //Draw the head
         ellipse(0,-this.headDiameter/2,this.headDiameter);
+
+        noFill();
+        strokeWeight(this.drawLineWidth);
+        stroke(this.mainColor);
 
         //Draw body
         line(0,0,0,this.bodyLength);

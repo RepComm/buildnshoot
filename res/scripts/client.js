@@ -9,6 +9,8 @@ const Utils = require("./utils/utils.js");
 
 let loadedChunks = [];
 
+let winRect;
+
 let nightColor;
 let dayColor;
 let amount = 0; //0, 1
@@ -17,6 +19,7 @@ let dayCycleAmount = 0.001;
 let cam;
 let inventorySelectedSlot = 0;
 let inventory = ["grass", "dirt", "stone"];
+let inventoryMaxDisplayedSlots = 9;
 
 let localPlayer;
 
@@ -56,7 +59,7 @@ function updateBlockSelect () {
         (mousePos.y - cam.y) / World.drawScale,
         Chunk.prototype.blockHeight
     );
-    
+
     mousePos.worldBlockX = mousePos.worldPixelX/Chunk.prototype.blockWidth;
     mousePos.worldBlockY = mousePos.worldPixelY/Chunk.prototype.blockHeight;
 
@@ -73,14 +76,13 @@ window.preload = preload;
 function setup () {
     localPlayer = new Player();
     window.localPlayer = localPlayer;
-    console.log("Hello World");
 
     cam = new Camera();
     Input.init();
 
     cursor(CROSS);
 
-    let winRect = document.getElementById("render_container").getBoundingClientRect();
+    winRect = document.getElementById("render_container").getBoundingClientRect();
     let canv = createCanvas(winRect.width, winRect.height);
     canv.parent("render_container");
 
@@ -161,7 +163,6 @@ function setup () {
         evt.preventDefault();
         if (!inventory[inventorySelectedSlot]) return;
         setBlockAtDocumentPixels(evt.clientX, evt.clientY, inventory[inventorySelectedSlot]);
-        console.log("Placing block");
         return false;
     }, false);
 
@@ -170,7 +171,6 @@ function setup () {
         if (inventorySelectedSlot > inventory.length-1) {
             inventorySelectedSlot = 0;
         }
-        console.log(inventorySelectedSlot, inventory[inventorySelectedSlot]);
     });
 
     document.addEventListener("mousemove", (evt)=>{
@@ -192,19 +192,23 @@ window.windowResized = windowResized;
 
 function draw () {
     if (Input.isPressed("a")) {
-        cam.x+=0.5*World.drawScale;
+        localPlayer.position.x -= 0.5*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("d")) {
-        cam.x-=0.5*World.drawScale;
+        localPlayer.position.x += 0.5*World.drawScale;
         updateBlockSelect();
     }
     if (Input.isPressed("w")) {
-        cam.y+=0.5*World.drawScale;
+        localPlayer.position.y -= 0.5*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("s")) {
-        cam.y-=0.5*World.drawScale;
+        localPlayer.position.y += 0.5*World.drawScale;
         updateBlockSelect();
     }
+
+    cam.x = winRect.width/2-localPlayer.position.x;
+    cam.y = winRect.height/2-localPlayer.position.y;
+
     push();
     translate(cam.x, cam.y);
     if (amount > 0.99) {
@@ -255,6 +259,25 @@ function draw () {
         Chunk.prototype.blockWidth*World.drawScale,
         Chunk.prototype.blockHeight*World.drawScale
     );
+
+    translate(-cam.x, -cam.y);
+    translate(
+        winRect.width/2 - ((inventoryMaxDisplayedSlots * Chunk.prototype.blockWidth*World.drawScale)/2),
+        -Chunk.prototype.blockHeight*World.drawScale
+    );
+    for (let i=0; i<inventoryMaxDisplayedSlots;i++) {
+        if (i === inventorySelectedSlot) {
+            stroke(200);
+        } else {
+            stroke(0);
+        }
+        rect(
+            i*(Chunk.prototype.blockWidth+2)*World.drawScale,
+            winRect.height-Chunk.prototype.blockHeight*World.drawScale,
+            Chunk.prototype.blockWidth*World.drawScale,
+            Chunk.prototype.blockHeight*World.drawScale
+        );
+    }
 
     pop();
 }
