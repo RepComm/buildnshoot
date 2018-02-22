@@ -6,6 +6,10 @@ const Camera = require("./utils/camera.js");
 const Input = require("./utils/input.js");
 const Player = require("./entity/player.js");
 const Utils = require("./utils/utils.js");
+const Animation = require("./animation/animation.js");
+
+const fs = require("fs");
+
 
 let loadedChunks = [];
 
@@ -22,6 +26,7 @@ let inventory = ["grass", "dirt", "stone"];
 let inventoryMaxDisplayedSlots = 9;
 
 let localPlayer;
+let playerAnim;
 
 window.setBlockRef = function(id) {
     currentBlockRefId = id;
@@ -69,12 +74,17 @@ function updateBlockSelect () {
 function preload () {
     //Load the texture map for our blocks
     Blocks.loadTextureMap("res/textures/blocks.png");
+    
+    playerAnim = Animation.fromJsonString(
+        fs.readFileSync("res/animations/player.json")
+    );
 }
 
 window.preload = preload;
 
 function setup () {
     localPlayer = new Player();
+    localPlayer.animation = playerAnim;
     window.localPlayer = localPlayer;
 
     cam = new Camera();

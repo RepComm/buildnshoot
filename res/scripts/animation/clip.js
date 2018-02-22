@@ -27,7 +27,8 @@ class Clip {
         for (let i=0; i<propertyNames.length; i++) {
             result.properties.push(
                 Property.fromJsonObject(
-                    result[
+                    propertyNames[i],
+                    jsonObject[
                         propertyNames[i]
                     ]
                 )

@@ -8,7 +8,9 @@ class Player extends Entity {
         this.isVisible = true;
         this.isAlive = false;
         this.mainColor = "#000";
-        this.currentAnimation = "basepose";
+
+        //Replace states with Animation avatar class
+        this.currentAnimationClip = "walkRight";
         this.animation = undefined;
 
         this.bodyLength = 30;
