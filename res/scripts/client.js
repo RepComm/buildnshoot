@@ -10,7 +10,6 @@ const Animation = require("./animation/animation.js");
 
 const fs = require("fs");
 
-
 let loadedChunks = [];
 
 let winRect;
@@ -83,6 +82,7 @@ function preload () {
 window.preload = preload;
 
 function setup () {
+    window.frameRate(60);
     localPlayer = new Player();
     localPlayer.animation = playerAnim;
     window.localPlayer = localPlayer;
@@ -272,7 +272,7 @@ function draw () {
 
     translate(-cam.x, -cam.y);
     translate(
-        winRect.width/2 - ((inventoryMaxDisplayedSlots * Chunk.prototype.blockWidth*World.drawScale)/2),
+        winRect.width/2 - (((inventoryMaxDisplayedSlots+1) * Chunk.prototype.blockWidth*World.drawScale)/2),
         -Chunk.prototype.blockHeight*World.drawScale
     );
     for (let i=0; i<inventoryMaxDisplayedSlots;i++) {

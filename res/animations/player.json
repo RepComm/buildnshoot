@@ -2,36 +2,60 @@
     "name":"player",
     "clips":{
         "walkLeft":{
-            "fps":4,
+            "fps":1.8,
             "interpolate":true,
             "loop":"0-1",
-            "armLeft":{
+            "lArm":{
                 "rotation":{
                     "0":-30,
                     "1":30
                 }
             },
-            "forearmLeft":{
+            "lForearm":{
                 "rotation":{
-                    "0":0,
+                    "0":-15,
                     "1":-15
                 }
             },
-            "armRight":{
+            "rArm":{
                 "rotation":{
                     "0":30,
                     "1":-30
                 }
             },
-            "forearmRight":{
+            "rForearm":{
                 "rotation":{
-                    "0":0,
+                    "0":-15,
                     "1":-15
+                }
+            },
+            "rLeg":{
+                "rotation":{
+                    "0":30,
+                    "1":-30
+                }
+            },
+            "rForeleg":{
+                "rotation":{
+                    "0":15,
+                    "1":15
+                }
+            },
+            "lLeg":{
+                "rotation":{
+                    "0":-30,
+                    "1":30
+                }
+            },
+            "lForeleg":{
+                "rotation":{
+                    "0":15,
+                    "1":15
                 }
             }
         },
         "walkRight":{
-            "fps":4,
+            "fps":1.8,
             "interpolate":true,
             "copy":{
                 "from":"walkLeft",

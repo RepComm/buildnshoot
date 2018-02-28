@@ -1,6 +1,9 @@
 
 const AnimationController = require("../animation/animationcontroller.js");
+const Animation = require("../animation/animation.js");
 const Entity = require("./entity.js");
+
+const fs = require("fs");
 
 class Player extends Entity {
     constructor () {
@@ -42,6 +45,7 @@ class Player extends Entity {
         this.body.appendChild(rLeg);
 
         let rForeleg = new LinePart("rForeleg", 11);
+        rForeleg.position.set(0, 11);
         rForeleg.rotation = window.radians(15);
         rLeg.appendChild(rForeleg);
 
@@ -51,17 +55,36 @@ class Player extends Entity {
         this.body.appendChild(lLeg);
 
         let lForeleg = new LinePart("lForeleg", 11);
+        lForeleg.position.set(0, 11);
         lForeleg.rotation = window.radians(15);
         lLeg.appendChild(lForeleg);
 
-        this.animationController.setRig(this.body);
+        this.body.getAllChildren( (children)=> {
+            let rig = {properties:children};
+            this.animationController.setRig(rig);
+            console.log("Attached rig to controller");
+
+            fs.readFile("./res/animations/player.json", 'utf8', (err, data)=> {
+                if (err) throw err;
+                let anim = Animation.fromJsonString(data);
+                this.animationController.setAnimation(anim);
+                console.log("Attached animation to controller");
+
+                //Demo walking left animation (far from great, but it works!)
+                this.animationController.setPlayingClip("walkLeft");
+            });
+
+        } );
 
         this.position.set(200, 420);
     }
 
     render () {
+        this.animationController.update();
         push();
 
+        fill(0);
+        strokeWeight(3);
         //Move to the player's position
         translate(this.position.x, this.position.y);
 
@@ -72,7 +95,9 @@ class Player extends Entity {
 }
 
 class Part {
-    constructor (name) {
+    constructor (name, parent) {
+        this.parent = undefined;
+        if (parent) setParent(parent);
         this.name = name;
         this.children = undefined;
         this.position = window.createVector();
@@ -82,6 +107,44 @@ class Part {
          * Parts will be sorted based on their order, and rendered in that order
          */
         this.order = 0;
+    }
+
+    getAllChildren (callback) {
+        let result = {};
+        this.getAllChildrenIterate(result);
+        callback(result);
+    }
+
+    getAllChildrenIterate (properties) {
+        if (properties) {
+            if (this.children && this.children.length > 0) {
+                for (let i=0; i<this.children.length; i++) {
+                    if (this.children[i]) {
+                        properties[this.children[i].name] = this.children[i];
+                        this.children[i].getAllChildrenIterate(properties);
+                    }
+                }
+            }
+        } else {
+            throw "No array specified to add to..";
+        }
+    }
+
+    removeFromParent() {
+        if (this.parent) {
+            for (let i=0; i<this.parent.children.length; i++) {
+                if (this.parent.children[i] === this) {
+                    this.parent.children.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    }
+
+    setParent (parent) {
+        this.removeFromParent();
+        this.parent = parent;
+        this.parent.children.push(this);
     }
 
     draw () {
@@ -105,12 +168,10 @@ class Part {
 
     appendChild (child) {
         if (!this.children) this.children = [];
-        if (this.children.length === 0) {
-            this.children.push(child);
-        } else {
-            this.children.push(child);
+        if (this.children.length !== 0) {
             this.children.sort(this.compare);
         }
+        child.setParent(this);
     }
 }
 
@@ -123,7 +184,7 @@ class LinePart extends Part {
     draw () {
         push();
         translate(this.position.x, this.position.y);
-
+        rotate(this.rotation);
         line(0,0,0, this.lineLength);
 
         if (this.children && this.children.length) { //A length of 0 is falsy, and the statement won't execute
@@ -146,9 +207,10 @@ class CirclePart extends Part {
 
     draw () {
         push();
+        noStroke();
         translate(this.position.x, this.position.y);
 
-        ellipse(0,0, this.diameter, this.diameter);
+        ellipse(0,-this.diameter/2, this.diameter, this.diameter);
 
         if (this.children && this.children.length) { //A length of 0 is falsy, and the statement won't execute
             for (let i=0; i<this.children.length; i++) {

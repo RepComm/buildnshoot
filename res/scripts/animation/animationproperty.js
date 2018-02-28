@@ -1,4 +1,6 @@
 
+const Utils = require("../utils/utils.js");
+
 class AnimationProperty {
     constructor (name) {
         this.name = name;
@@ -17,6 +19,10 @@ class AnimationProperty {
             throw "Scale in animation property is not supported yet!";
         }
         return result;
+    }
+
+    lerpRotate (progress) {
+        
     }
 }
 

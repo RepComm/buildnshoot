@@ -24,6 +24,9 @@ class AnimationClip {
             }
         }
 
+        result.fps = jsonObject.fps;
+        if (!result.fps) result.fps = 1;
+
         let propertyNames = Object.keys(jsonObject).filter(key => {
             switch (key) {
                 case "name":break;
