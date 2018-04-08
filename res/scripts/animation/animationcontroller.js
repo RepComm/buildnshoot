@@ -39,10 +39,10 @@ class AnimationController {
         this.currentClipProgress += (this.currentClip.fps / window.frameRate());
         if (this.currentClipProgress > 1.0) this.currentClipProgress = 0.0;
 
-        text("Clip FPS:" + this.currentClip.fps + ", Clip Progress:" + this.currentClipProgress, 20, 20);
-
         for (let i = 0; i < this.currentClip.properties.length; i++) {
             this.currentClipProperty = this.currentClip.properties[i];
+            if (!this.currentClipProperty.rotation) continue;
+            if (this.currentClipProperty.rotation.length < 2) continue;
             this.rig.properties[
                 this.currentClipProperty.name
             ].rotation = window.radians(window.lerp(

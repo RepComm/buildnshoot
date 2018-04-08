@@ -88,7 +88,6 @@ function setup () {
     window.localPlayer = localPlayer;
 
     cam = new Camera();
-    Input.init();
 
     cursor(CROSS);
 
@@ -189,6 +188,19 @@ function setup () {
 
         updateBlockSelect();
     });
+
+    document.addEventListener("keydown", (evt)=> {
+        if (localPlayer.okayToAnimate && Input.isPressed(evt.key)) return;
+        if (evt.keyCode == 68) {
+            console.log("Walk right");
+            localPlayer.animationController.setPlayingClip("walkRight");
+        } else if (evt.keyCode === 65) {
+            console.log("Walk left");
+            localPlayer.animationController.setPlayingClip("walkLeft");
+        }
+    });
+
+    Input.init();
 }
 
 window.setup = setup;
@@ -262,7 +274,7 @@ function draw () {
         mousePos.worldPixelY*World.drawScale-2
     );
 
-    strokeWeight(World.drawScale);
+    strokeWeight(1);
     rect(
         mousePos.worldPixelX*World.drawScale,
         mousePos.worldPixelY*World.drawScale,

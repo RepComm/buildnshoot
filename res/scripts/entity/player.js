@@ -2,7 +2,6 @@
 const AnimationController = require("../animation/animationcontroller.js");
 const Animation = require("../animation/animation.js");
 const Entity = require("./entity.js");
-
 const fs = require("fs");
 
 class Player extends Entity {
@@ -68,10 +67,7 @@ class Player extends Entity {
                 if (err) throw err;
                 let anim = Animation.fromJsonString(data);
                 this.animationController.setAnimation(anim);
-                console.log("Attached animation to controller");
-
-                //Demo walking left animation (far from great, but it works!)
-                this.animationController.setPlayingClip("walkLeft");
+                this.okayToAnimate = true;
             });
 
         } );
