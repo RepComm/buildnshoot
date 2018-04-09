@@ -16,6 +16,7 @@ class Player extends Entity {
         this.body = new LinePart("body", 30);
 
         let head = new CirclePart("head", 25);
+        head.setColor("blue");
         this.body.appendChild(head);
 
         let rArm = new LinePart("rArm", 11);
@@ -27,6 +28,7 @@ class Player extends Entity {
         rForearm.position.set(0, 11);
         rForearm.rotation = window.radians(10);
         rArm.appendChild(rForearm);
+        rForearm.setColor("green");
 
         let lArm = new LinePart("lArm", 11);
         lArm.position.set(0,7);
@@ -37,6 +39,7 @@ class Player extends Entity {
         lForearm.position.set(0, 11);
         lForearm.rotation = window.radians(10);
         lArm.appendChild(lForearm);
+        lForearm.setColor("red");
 
         let rLeg = new LinePart("rLeg", 11);
         rLeg.position.set(0, 30);
@@ -98,11 +101,16 @@ class Part {
         this.children = undefined;
         this.position = window.createVector();
         this.rotation = 0;
+        this.color = "black";
 
         /* Order is instruction on prefered order of parts drawn
          * Parts will be sorted based on their order, and rendered in that order
          */
         this.order = 0;
+    }
+
+    setColor (c) {
+        this.color = c;
     }
 
     getAllChildren (callback) {
@@ -181,6 +189,7 @@ class LinePart extends Part {
         push();
         translate(this.position.x, this.position.y);
         rotate(this.rotation);
+        stroke(this.color);
         line(0,0,0, this.lineLength);
 
         if (this.children && this.children.length) { //A length of 0 is falsy, and the statement won't execute
@@ -205,7 +214,7 @@ class CirclePart extends Part {
         push();
         noStroke();
         translate(this.position.x, this.position.y);
-
+        stroke(this.color);
         ellipse(0,-this.diameter/2, this.diameter, this.diameter);
 
         if (this.children && this.children.length) { //A length of 0 is falsy, and the statement won't execute

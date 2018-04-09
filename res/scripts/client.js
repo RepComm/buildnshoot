@@ -192,11 +192,17 @@ function setup () {
     document.addEventListener("keydown", (evt)=> {
         if (localPlayer.okayToAnimate && Input.isPressed(evt.key)) return;
         if (evt.keyCode == 68) {
-            console.log("Walk right");
+            localPlayer.animationController.setPlaying(true);
             localPlayer.animationController.setPlayingClip("walkRight");
         } else if (evt.keyCode === 65) {
-            console.log("Walk left");
+            localPlayer.animationController.setPlaying(true);
             localPlayer.animationController.setPlayingClip("walkLeft");
+        }
+    });
+
+    document.addEventListener("keyup", (evt)=> {
+        if (evt.keyCode == 68 || evt.keyCode == 65) {
+            localPlayer.animationController.setPlaying(false);
         }
     });
 
@@ -214,17 +220,17 @@ window.windowResized = windowResized;
 
 function draw () {
     if (Input.isPressed("a")) {
-        localPlayer.position.x -= 0.5*World.drawScale;
+        localPlayer.position.x -= 0.8*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("d")) {
-        localPlayer.position.x += 0.5*World.drawScale;
+        localPlayer.position.x += 0.8*World.drawScale;
         updateBlockSelect();
     }
     if (Input.isPressed("w")) {
-        localPlayer.position.y -= 0.5*World.drawScale;
+        localPlayer.position.y -= 0.8*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("s")) {
-        localPlayer.position.y += 0.5*World.drawScale;
+        localPlayer.position.y += 0.8*World.drawScale;
         updateBlockSelect();
     }
 

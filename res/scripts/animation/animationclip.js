@@ -39,7 +39,6 @@ class AnimationClip {
         });
 
         result.properties = [];
-        let propertyJson;
         for (let i=0; i<propertyNames.length; i++) {
             result.properties.push(
                 AnimationProperty.fromJsonObject(

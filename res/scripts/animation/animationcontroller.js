@@ -1,6 +1,7 @@
 
 class AnimationController {
     constructor() {
+        this.isPlaying = true;
         this.animation = undefined;
         this.currentClipIndex = 0;
         this.currentClip = undefined;
@@ -15,6 +16,10 @@ class AnimationController {
 
     setAnimation(animation) {
         this.animation = animation;
+    }
+
+    setPlaying(isPlaying) {
+        this.isPlaying = isPlaying;
     }
 
     setPlayingClip(name) {
@@ -35,7 +40,7 @@ class AnimationController {
     }
 
     update() {
-        if (!this.currentClip) return;
+        if (!this.currentClip || !this.isPlaying) return;
         this.currentClipProgress += (this.currentClip.fps / window.frameRate());
         if (this.currentClipProgress > 1.0) this.currentClipProgress = 0.0;
 
