@@ -11,6 +11,8 @@ class Player extends Entity {
         this.isAlive = false;
         this.mainColor = "#000";
 
+        this.walkSpeed = 8;
+
         this.animationController = new AnimationController();
 
         this.body = new LinePart("body", 30);

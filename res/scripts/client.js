@@ -27,6 +27,8 @@ let inventoryMaxDisplayedSlots = 9;
 let localPlayer;
 let playerAnim;
 
+let worldBackground;
+
 window.setBlockRef = function(id) {
     currentBlockRefId = id;
 }
@@ -77,6 +79,8 @@ function preload () {
     playerAnim = Animation.fromJsonString(
         fs.readFileSync("res/animations/player.json")
     );
+
+    worldBackground = loadImage("res/textures/seamless_forest_night_01.png");
 }
 
 window.preload = preload;
@@ -175,9 +179,17 @@ function setup () {
         return false;
     }, false);
 
-    document.addEventListener("mousewheel", (evt)=> {
-        inventorySelectedSlot+=1;
-        if (inventorySelectedSlot > inventory.length-1) {
+    document.addEventListener("wheel", (evt)=> {
+        if (evt.deltaY === 0) {
+
+        } else if (evt.deltaY > 0) {
+            inventorySelectedSlot+=1;
+        } else {
+            inventorySelectedSlot-=1;
+        }
+        if (inventorySelectedSlot < 0) {
+            inventorySelectedSlot = inventory.length-1;
+        } else if (inventorySelectedSlot > inventory.length-1) {
             inventorySelectedSlot = 0;
         }
     });
@@ -220,17 +232,17 @@ window.windowResized = windowResized;
 
 function draw () {
     if (Input.isPressed("a")) {
-        localPlayer.position.x -= 0.8*World.drawScale;
+        localPlayer.position.x -= localPlayer.walkSpeed*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("d")) {
-        localPlayer.position.x += 0.8*World.drawScale;
+        localPlayer.position.x += localPlayer.walkSpeed*World.drawScale;
         updateBlockSelect();
     }
     if (Input.isPressed("w")) {
-        localPlayer.position.y -= 0.8*World.drawScale;
+        localPlayer.position.y -= localPlayer.walkSpeed*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("s")) {
-        localPlayer.position.y += 0.8*World.drawScale;
+        localPlayer.position.y += localPlayer.walkSpeed*World.drawScale;
         updateBlockSelect();
     }
 
@@ -252,6 +264,18 @@ function draw () {
     }
 
     background(lerpColor(nightColor, dayColor, amount));
+
+    let width = winRect.height*(worldBackground.width/worldBackground.height);
+    if (-cam.x/2 < 0) {
+        push();
+        translate(-width-cam.x/2, -cam.y);
+        image( worldBackground, 0, 0, width, winRect.height );
+        pop();
+    }
+    push();
+    translate(-cam.x/2, -cam.y);
+    image( worldBackground, 0, 0, width, winRect.height );
+    pop();
 
     for (let i=0; i<loadedChunks.length; i++) {
         if (loadedChunks[i]) {
@@ -299,6 +323,7 @@ function draw () {
         } else {
             stroke(0);
         }
+        
         rect(
             i*(Chunk.prototype.blockWidth+2)*World.drawScale,
             winRect.height-Chunk.prototype.blockHeight*World.drawScale,
