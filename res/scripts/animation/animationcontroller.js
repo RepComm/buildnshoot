@@ -55,6 +55,16 @@ class AnimationController {
                 this.currentClipProperty.rotation["1"],
                 this.currentClipProgress
             ));
+
+            if (!this.currentClipProperty.ty) continue;
+            if (this.currentClipProperty.ty.length < 2) continue;
+            this.rig.properties[
+                this.currentClipProperty.name
+            ].position.y = window.lerp(
+                this.currentClipProperty.ty["0"],
+                this.currentClipProperty.ty["1"],
+                this.currentClipProgress
+            );
         }
     }
 }

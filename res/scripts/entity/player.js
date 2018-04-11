@@ -11,7 +11,7 @@ class Player extends Entity {
         this.isAlive = false;
         this.mainColor = "#000";
 
-        this.walkSpeed = 8;
+        this.walkSpeed = 2;
 
         this.animationController = new AnimationController();
 
@@ -64,7 +64,9 @@ class Player extends Entity {
         lLeg.appendChild(lForeleg);
 
         this.body.getAllChildren( (children)=> {
-            let rig = {properties:children};
+            let props = children;
+            props[this.body.name] = this.body;
+            let rig = {properties:props};
             this.animationController.setRig(rig);
             console.log("Attached rig to controller");
 

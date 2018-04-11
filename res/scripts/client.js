@@ -210,10 +210,15 @@ function setup () {
             localPlayer.animationController.setPlaying(true);
             localPlayer.animationController.setPlayingClip("walkLeft");
         }
+        //console.log(evt.keyCode);
+        if (evt.keyCode === 83) {
+            localPlayer.animationController.setPlaying(true);
+            localPlayer.animationController.setPlayingClip("crouch");
+        }
     });
 
     document.addEventListener("keyup", (evt)=> {
-        if (evt.keyCode == 68 || evt.keyCode == 65) {
+        if (evt.keyCode === 68 || evt.keyCode === 65 || evt.keyCode === 83) {
             localPlayer.animationController.setPlaying(false);
         }
     });
@@ -236,13 +241,6 @@ function draw () {
         updateBlockSelect();
     } else if (Input.isPressed("d")) {
         localPlayer.position.x += localPlayer.walkSpeed*World.drawScale;
-        updateBlockSelect();
-    }
-    if (Input.isPressed("w")) {
-        localPlayer.position.y -= localPlayer.walkSpeed*World.drawScale;
-        updateBlockSelect();
-    } else if (Input.isPressed("s")) {
-        localPlayer.position.y += localPlayer.walkSpeed*World.drawScale;
         updateBlockSelect();
     }
 
