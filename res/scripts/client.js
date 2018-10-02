@@ -58,16 +58,16 @@ let selection = {
 function updateBlockSelect () {
     mousePos.worldPixelX = Utils.roundToNext(
         (mousePos.x - cam.x) / World.drawScale,
-        Chunk.prototype.blockWidth
+        Chunk.blockWidth
     );
 
     mousePos.worldPixelY = Utils.roundToNext(
         (mousePos.y - cam.y) / World.drawScale,
-        Chunk.prototype.blockHeight
+        Chunk.blockHeight
     );
 
-    mousePos.worldBlockX = mousePos.worldPixelX/Chunk.prototype.blockWidth;
-    mousePos.worldBlockY = mousePos.worldPixelY/Chunk.prototype.blockHeight;
+    mousePos.worldBlockX = mousePos.worldPixelX/Chunk.blockWidth;
+    mousePos.worldBlockY = mousePos.worldPixelY/Chunk.blockHeight;
 
     mousePos.posStr = mousePos.worldBlockX + ", " + mousePos.worldBlockY;
 }
@@ -109,8 +109,8 @@ function setup () {
             let c = new Chunk(i, j);
             loadedChunks.push(c);
 
-            for (let x=0; x<Chunk.prototype.width; x++) {
-                for (let y=0; y<Chunk.prototype.height; y++) {
+            for (let x=0; x<Chunk.width; x++) {
+                for (let y=0; y<Chunk.height; y++) {
                     if (j === 0) {
 
                     } else if (j === 1) {
@@ -124,7 +124,7 @@ function setup () {
                             c.setBlock(x, y, "dirt");
                         }
                     } else if (j === 2) {
-                        if ( Math.random() < y / Chunk.prototype.height ) {
+                        if ( Math.random() < y / Chunk.height ) {
                             c.setBlock(x, y, "stone");
                         } else {
                             c.setBlock(x, y, "dirt");
@@ -144,14 +144,14 @@ function setup () {
         selection.worldPixelX = (px - cam.x) / World.drawScale;
         selection.worldPixelY = (py - cam.y) / World.drawScale;
         
-        selection.worldBlockX = selection.worldPixelX / Chunk.prototype.blockWidth;
-        selection.worldBlockY = selection.worldPixelY / Chunk.prototype.blockHeight;
+        selection.worldBlockX = selection.worldPixelX / Chunk.blockWidth;
+        selection.worldBlockY = selection.worldPixelY / Chunk.blockHeight;
 
-        selection.chunkX = Math.floor( selection.worldBlockX / Chunk.prototype.width );
-        selection.chunkY = Math.floor( selection.worldBlockY / Chunk.prototype.height );
+        selection.chunkX = Math.floor( selection.worldBlockX / Chunk.width );
+        selection.chunkY = Math.floor( selection.worldBlockY / Chunk.height );
 
-        selection.chunkBlockX = selection.worldBlockX - (selection.chunkX*Chunk.prototype.width);
-        selection.chunkBlockY = selection.worldBlockY - (selection.chunkY*Chunk.prototype.height);
+        selection.chunkBlockX = selection.worldBlockX - (selection.chunkX*Chunk.width);
+        selection.chunkBlockY = selection.worldBlockY - (selection.chunkY*Chunk.height);
 
         for (let i=0; i<loadedChunks.length; i++) {
             selection.chunk = loadedChunks[i];
@@ -281,7 +281,7 @@ function draw () {
             push();
 
             //Translate to the chunk's draw space
-            translate(loadedChunks[i].x * Chunk.prototype.drawnPixelWidth, loadedChunks[i].y * Chunk.prototype.drawnPixelHeight);
+            translate(loadedChunks[i].x * Chunk.drawnPixelWidth, loadedChunks[i].y * Chunk.drawnPixelHeight);
             //Tell the chunk to draw
             loadedChunks[i].draw();
 
@@ -306,14 +306,14 @@ function draw () {
     rect(
         mousePos.worldPixelX*World.drawScale,
         mousePos.worldPixelY*World.drawScale,
-        Chunk.prototype.blockWidth*World.drawScale,
-        Chunk.prototype.blockHeight*World.drawScale
+        Chunk.blockWidth*World.drawScale,
+        Chunk.blockHeight*World.drawScale
     );
 
     translate(-cam.x, -cam.y);
     translate(
-        winRect.width/2 - (((inventoryMaxDisplayedSlots+1) * Chunk.prototype.blockWidth*World.drawScale)/2),
-        -Chunk.prototype.blockHeight*World.drawScale
+        winRect.width/2 - (((inventoryMaxDisplayedSlots+1) * Chunk.blockWidth*World.drawScale)/2),
+        -Chunk.blockHeight*World.drawScale
     );
     for (let i=0; i<inventoryMaxDisplayedSlots;i++) {
         if (i === inventorySelectedSlot) {
@@ -323,10 +323,10 @@ function draw () {
         }
         
         rect(
-            i*(Chunk.prototype.blockWidth+2)*World.drawScale,
-            winRect.height-Chunk.prototype.blockHeight*World.drawScale,
-            Chunk.prototype.blockWidth*World.drawScale,
-            Chunk.prototype.blockHeight*World.drawScale
+            i*(Chunk.blockWidth+2)*World.drawScale,
+            winRect.height-Chunk.blockHeight*World.drawScale,
+            Chunk.blockWidth*World.drawScale,
+            Chunk.blockHeight*World.drawScale
         );
     }
 

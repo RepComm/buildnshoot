@@ -11,31 +11,31 @@ class Chunk {
         this.collideData = undefined;
 
         //Block data, Unsigned Short (2 bytes), 65535 combinations
-        this.data = new Uint16Array(Chunk.prototype.width * Chunk.prototype.height);
+        this.data = new Uint16Array(Chunk.width * Chunk.height);
 
         //The chunk is rendered as an image
         this.image = createImage(
-            Chunk.prototype.width * Chunk.prototype.blockWidth,
-            Chunk.prototype.height * Chunk.prototype.blockHeight
+            Chunk.width * Chunk.blockWidth,
+            Chunk.height * Chunk.blockHeight
         );
     }
 
     calculatePixels () {
-        if (!Blocks.prototype.textureMap) {
+        if (!Blocks.textureMap) {
             throw "No texture map is loaded! Use Blocks.loadTextureMap(fname); before calculating pixels!";
         }
 
         this.clearPixels();
 
-        for (let xi=0; xi<Chunk.prototype.width;xi++) {
-            for (let yi=0; yi<Chunk.prototype.height;yi++) {
+        for (let xi=0; xi<Chunk.width;xi++) {
+            for (let yi=0; yi<Chunk.height;yi++) {
                 this.calculateBlockPixels(xi, yi);
             }
         }
     }
 
     calculateBlockPixels (x, y) {
-        let i = Utils.TwoDimToIndex(x, y, Chunk.prototype.width);
+        let i = Utils.TwoDimToIndex(x, y, Chunk.width);
         //Grab the block's type id (what type of block it is)
         let blockTypeId = this.data[i];
 
@@ -48,19 +48,19 @@ class Chunk {
         if (ref !== undefined) {
             this.image.copy(
                 //Texture map to use (contains all of the blocks in one image)
-                Blocks.prototype.textureMap,
+                Blocks.textureMap,
                 //Where to copy pixels from in the texture map
                 ref.imageMinX,
                 ref.imageMinY,
                 //Size to copy from texture map (always block size)
-                Chunk.prototype.blockWidth,
-                Chunk.prototype.blockHeight,
+                Chunk.blockWidth,
+                Chunk.blockHeight,
                 //Where to draw the block at in this chunk/image
-                x*Chunk.prototype.blockWidth,
-                y*Chunk.prototype.blockHeight,
+                x*Chunk.blockWidth,
+                y*Chunk.blockHeight,
                 //Size to draw (always block size)
-                Chunk.prototype.blockWidth,
-                Chunk.prototype.blockHeight
+                Chunk.blockWidth,
+                Chunk.blockHeight
             );
         } else {
             throw blockTypeId +" is not a registered block";
@@ -75,8 +75,8 @@ class Chunk {
 
     clearBlockPixels (x, y) {
         this.image.loadPixels();
-        for (let xi=x*Chunk.prototype.blockWidth; xi<(x*Chunk.prototype.blockWidth)+Chunk.prototype.blockWidth; xi++) {
-            for (let yi=y*Chunk.prototype.blockHeight; yi<(y*Chunk.prototype.blockHeight)+Chunk.prototype.blockHeight; yi++) {
+        for (let xi=x*Chunk.blockWidth; xi<(x*Chunk.blockWidth)+Chunk.blockWidth; xi++) {
+            for (let yi=y*Chunk.blockHeight; yi<(y*Chunk.blockHeight)+Chunk.blockHeight; yi++) {
                 /*Not the most efficient method,
                 but we'll fix it later,
                 and its still more efficient than calculating the whole chunk again.
@@ -94,11 +94,11 @@ class Chunk {
             if (typeof(id) !== "string") {
                 throw "id must be an integer id or string name";
             } else {
-                this.data[ Utils.TwoDimToIndex(x, y, Chunk.prototype.width) ] = Blocks.prototype.byName[id];
+                this.data[ Utils.TwoDimToIndex(x, y, Chunk.width) ] = Blocks.byName[id];
             }
         } else {
             if (id < 0 || id > 65535) throw "id must be integer between 0 and 65535";
-            this.data[ Utils.TwoDimToIndex(x, y, Chunk.prototype.width) ] = id;
+            this.data[ Utils.TwoDimToIndex(x, y, Chunk.width) ] = id;
         }
     }
 
@@ -109,28 +109,28 @@ class Chunk {
     }
 
     draw () {
-        image(this.image, 0, 0, Chunk.prototype.drawnPixelWidth, Chunk.prototype.drawnPixelHeight);
+        image(this.image, 0, 0, Chunk.drawnPixelWidth, Chunk.drawnPixelHeight);
     }
 }
 
 //Static block width/height
-Chunk.prototype.width = 16;
-Chunk.prototype.height = 8;
+Chunk.width = 16;
+Chunk.height = 8;
 
 //Static block pixel width/height
-Chunk.prototype.blockWidth = 16;
-Chunk.prototype.blockHeight = 16;
+Chunk.blockWidth = 16;
+Chunk.blockHeight = 16;
 
 //READONLY chunk pixel width/height
-Chunk.prototype.pixelWidth = Chunk.prototype.width * Chunk.prototype.blockWidth;
-Chunk.prototype.pixelHeight = Chunk.prototype.height * Chunk.prototype.blockHeight;
+Chunk.pixelWidth = Chunk.width * Chunk.blockWidth;
+Chunk.pixelHeight = Chunk.height * Chunk.blockHeight;
 
 let World = {};
 World.drawScale = 3;
 window.World = World;
 
 //Chunk DRAWN pixel width/height
-Chunk.prototype.drawnPixelWidth = Chunk.prototype.pixelWidth*World.drawScale;
-Chunk.prototype.drawnPixelHeight = Chunk.prototype.pixelHeight*World.drawScale;
+Chunk.drawnPixelWidth = Chunk.pixelWidth*World.drawScale;
+Chunk.drawnPixelHeight = Chunk.pixelHeight*World.drawScale;
 
 module.exports = Chunk;

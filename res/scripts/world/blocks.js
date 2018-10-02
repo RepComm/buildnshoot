@@ -23,14 +23,14 @@ class Blocks {
             if (id < 0 || id > 65535) {
                 throw "Id must be an integer between 0 and 65535, it was instead: " + id;
             }
-            return Blocks.prototype.registeredBlocks[id.toString()];
+            return Blocks.registeredBlocks[id.toString()];
         } else if (typeof (id) == "string") {
-            return Blocks.prototype.registerBlocks[
-                Blocks.prototype.byName[id] //Name to id
+            return Blocks.registerBlocks[
+                Blocks.byName[id] //Name to id
             ];
         }
 
-        return Blocks.prototype.registeredBlocks[id.toString()];
+        return Blocks.registeredBlocks[id.toString()];
     }
     static registerBlockReference (blockReference, typeId) {
         if (!blockReference) {
@@ -44,18 +44,18 @@ class Blocks {
         let str = typeId.toString();
 
         //Unique number should be used
-        Blocks.prototype.registeredBlocks[ str ] = blockReference;
+        Blocks.registeredBlocks[ str ] = blockReference;
         //Names may not be unique! Last block registered with same name will overwrite!
-        Blocks.prototype.byName [ blockReference.name ] = typeId;
+        Blocks.byName [ blockReference.name ] = typeId;
     }
     static loadTextureMap (fname) {
-        Blocks.prototype.textureMap = loadImage(fname);
+        Blocks.textureMap = loadImage(fname);
     }
 }
 
-Blocks.prototype.registeredBlocks = {};
-Blocks.prototype.byName = {};
-Blocks.prototype.textureMap = undefined;
+Blocks.registeredBlocks = {};
+Blocks.byName = {};
+Blocks.textureMap = undefined;
 
 function registerBlocks () {
 
