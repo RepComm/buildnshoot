@@ -13,6 +13,7 @@
   "author": "RepComm",
   "license": "",
   "devDependencies": {
-    "electron": "^1.7.16"
-  }
+    "electron": "^3.0.2"
+  },
+  "dependencies": {}
 }
