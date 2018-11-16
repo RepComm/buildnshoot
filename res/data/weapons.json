@@ -7,10 +7,10 @@
             "uvs":[16, 0, 16, 32]
         }
     },
-    "ballon":{
+    "balloon":{
         "type":"grenade",
         "display":{
-            "name":"Ballon Bomb",
+            "name":"Balloon Bomb",
             "desc":"Definitely not helium"
         }
     },

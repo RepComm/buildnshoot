@@ -1,63 +1,72 @@
 
 const {EntityBranch, EntityLeaf} = require("./entity.js");
 const fs = require("fs");
+const Clip = require("animjs/clip");
 
 class Player extends EntityBranch {
     constructor () {
         super();
         this.isVisible = true;
         this.isAlive = false;
-        this.mainColor = "#000";
+        this.mainColor = "#fff";
 
         this.walkSpeed = 2;
+
+        this.clip = new Clip("Player");
+        this.clip.setBounds(1,60);
 
         this.body = new LinePart("body", 30);
 
         let head = new CirclePart("head", 25);
-        head.color="blue";
+        head.color="white";
         this.body.appendChild(head);
 
         let rArm = new LinePart("rArm", 11);
+        rArm.color = "white";
         rArm.position.set(0,7);
-        rArm.rotation = window.radians(45);
+        rArm.rotation = this.clip.addProperty("rArmRot", window.radians(45));
+        this.clip.setKeyFrame("rArmRot", 1, window.radians(45));
+        this.clip.setKeyFrame("rArmRot", 30, window.radians(-45));
+        this.clip.setKeyFrame("rArmRot", 60, window.radians(45));
+
         this.body.appendChild(rArm);
 
-        let rForearm = new LinePart("rForearm", 11);
-        rForearm.position.set(0, 11);
-        rForearm.rotation = window.radians(10);
-        rArm.appendChild(rForearm);
-        rForearm.color="green";
+        // let rForearm = new LinePart("rForearm", 11);
+        // rForearm.position.set(0, 11);
+        // rForearm.rotation = window.radians(10);
+        // rArm.appendChild(rForearm);
+        // rForearm.color="green";
 
-        let lArm = new LinePart("lArm", 11);
-        lArm.position.set(0,7);
-        lArm.rotation = window.radians(-45);
-        this.body.appendChild(lArm);
+        // let lArm = new LinePart("lArm", 11);
+        // lArm.position.set(0,7);
+        // lArm.rotation = window.radians(-45);
+        // this.body.appendChild(lArm);
 
-        let lForearm = new LinePart("lForearm", 11);
-        lForearm.position.set(0, 11);
-        lForearm.rotation = window.radians(10);
-        lArm.appendChild(lForearm);
-        lForearm.color="red";
+        // let lForearm = new LinePart("lForearm", 11);
+        // lForearm.position.set(0, 11);
+        // lForearm.rotation = window.radians(10);
+        // lArm.appendChild(lForearm);
+        // lForearm.color="red";
 
-        let rLeg = new LinePart("rLeg", 11);
-        rLeg.position.set(0, 30);
-        rLeg.rotation = window.radians(-15);
-        this.body.appendChild(rLeg);
+        // let rLeg = new LinePart("rLeg", 11);
+        // rLeg.position.set(0, 30);
+        // rLeg.rotation = window.radians(-15);
+        // this.body.appendChild(rLeg);
 
-        let rForeleg = new LinePart("rForeleg", 11);
-        rForeleg.position.set(0, 11);
-        rForeleg.rotation = window.radians(15);
-        rLeg.appendChild(rForeleg);
+        // let rForeleg = new LinePart("rForeleg", 11);
+        // rForeleg.position.set(0, 11);
+        // rForeleg.rotation = window.radians(15);
+        // rLeg.appendChild(rForeleg);
 
-        let lLeg = new LinePart("lLeg", 11);
-        lLeg.position.set(0, 30);
-        lLeg.rotation = window.radians(15);
-        this.body.appendChild(lLeg);
+        // let lLeg = new LinePart("lLeg", 11);
+        // lLeg.position.set(0, 30);
+        // lLeg.rotation = window.radians(15);
+        // this.body.appendChild(lLeg);
 
-        let lForeleg = new LinePart("lForeleg", 11);
-        lForeleg.position.set(0, 11);
-        lForeleg.rotation = window.radians(15);
-        lLeg.appendChild(lForeleg);
+        // let lForeleg = new LinePart("lForeleg", 11);
+        // lForeleg.position.set(0, 11);
+        // lForeleg.rotation = window.radians(15);
+        // lLeg.appendChild(lForeleg);
 
         this.body.getAllChildren( (children)=> {
             let props = children;
@@ -130,7 +139,7 @@ class LinePart extends Part {
     draw () {
         push();
         translate(this.position.x, this.position.y);
-        rotate(this.rotation);
+        rotate(this.rotation.value);
         stroke(this.color);
         line(0,0,0, this.lineLength);
 

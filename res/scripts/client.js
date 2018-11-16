@@ -227,6 +227,15 @@ window.windowResized = windowResized;
 
 function draw () {
     if (Input.isPressed("a")) {
+        if (!localPlayer.clip.currentFrame) {
+            localPlayer.clip.currentFrame = 0;
+        }
+        if (localPlayer.clip.currentFrame > localPlayer.clip.endFrame) {
+            localPlayer.clip.currentFrame = localPlayer.clip.beginFrame;
+        }
+        localPlayer.clip.applyFrame(localPlayer.clip.currentFrame);
+        localPlayer.clip.currentFrame++;
+
         localPlayer.position.x -= localPlayer.walkSpeed*World.drawScale;
         updateBlockSelect();
     } else if (Input.isPressed("d")) {

@@ -6,7 +6,7 @@ class EntityLeaf {
         this.position = window.createVector(0, 0);
         this.velocity = window.createVector(0, 0);
         this.acceleration = window.createVector(0, 0);
-        this.rotation = 0;
+        this.rotation = {value:0};
     }
 }
 
