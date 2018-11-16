@@ -1,10 +1,8 @@
 
-const AnimationController = require("../animation/animationcontroller.js");
-const Animation = require("../animation/animation.js");
-const Entity = require("./entity.js");
+const {EntityBranch, EntityLeaf} = require("./entity.js");
 const fs = require("fs");
 
-class Player extends Entity {
+class Player extends EntityBranch {
     constructor () {
         super();
         this.isVisible = true;
@@ -13,12 +11,10 @@ class Player extends Entity {
 
         this.walkSpeed = 2;
 
-        this.animationController = new AnimationController();
-
         this.body = new LinePart("body", 30);
 
         let head = new CirclePart("head", 25);
-        head.setColor("blue");
+        head.color="blue";
         this.body.appendChild(head);
 
         let rArm = new LinePart("rArm", 11);
@@ -30,7 +26,7 @@ class Player extends Entity {
         rForearm.position.set(0, 11);
         rForearm.rotation = window.radians(10);
         rArm.appendChild(rForearm);
-        rForearm.setColor("green");
+        rForearm.color="green";
 
         let lArm = new LinePart("lArm", 11);
         lArm.position.set(0,7);
@@ -41,7 +37,7 @@ class Player extends Entity {
         lForearm.position.set(0, 11);
         lForearm.rotation = window.radians(10);
         lArm.appendChild(lForearm);
-        lForearm.setColor("red");
+        lForearm.color="red";
 
         let rLeg = new LinePart("rLeg", 11);
         rLeg.position.set(0, 30);
@@ -66,24 +62,12 @@ class Player extends Entity {
         this.body.getAllChildren( (children)=> {
             let props = children;
             props[this.body.name] = this.body;
-            let rig = {properties:props};
-            this.animationController.setRig(rig);
-            console.log("Attached rig to controller");
-
-            fs.readFile("./res/animations/player.json", 'utf8', (err, data)=> {
-                if (err) throw err;
-                let anim = Animation.fromJsonString(data);
-                this.animationController.setAnimation(anim);
-                this.okayToAnimate = true;
-            });
-
         } );
 
         this.position.set(200, 420);
     }
 
     render () {
-        this.animationController.update();
         push();
 
         fill(0);
@@ -97,62 +81,16 @@ class Player extends Entity {
     }
 }
 
-class Part {
+class Part extends EntityBranch {
     constructor (name, parent) {
-        this.parent = undefined;
-        if (parent) setParent(parent);
-        this.name = name;
-        this.children = undefined;
-        this.position = window.createVector();
-        this.rotation = 0;
+        super(name, parent);
+        
         this.color = "black";
 
         /* Order is instruction on prefered order of parts drawn
          * Parts will be sorted based on their order, and rendered in that order
          */
         this.order = 0;
-    }
-
-    setColor (c) {
-        this.color = c;
-    }
-
-    getAllChildren (callback) {
-        let result = {};
-        this.getAllChildrenIterate(result);
-        callback(result);
-    }
-
-    getAllChildrenIterate (properties) {
-        if (properties) {
-            if (this.children && this.children.length > 0) {
-                for (let i=0; i<this.children.length; i++) {
-                    if (this.children[i]) {
-                        properties[this.children[i].name] = this.children[i];
-                        this.children[i].getAllChildrenIterate(properties);
-                    }
-                }
-            }
-        } else {
-            throw "No array specified to add to..";
-        }
-    }
-
-    removeFromParent() {
-        if (this.parent) {
-            for (let i=0; i<this.parent.children.length; i++) {
-                if (this.parent.children[i] === this) {
-                    this.parent.children.splice(i, 1);
-                    break;
-                }
-            }
-        }
-    }
-
-    setParent (parent) {
-        this.removeFromParent();
-        this.parent = parent;
-        this.parent.children.push(this);
     }
 
     draw () {

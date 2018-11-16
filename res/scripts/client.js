@@ -6,7 +6,6 @@ const Camera = require("./utils/camera.js");
 const Input = require("./utils/input.js");
 const Player = require("./entity/player.js");
 const Utils = require("./utils/utils.js");
-const Animation = require("./animation/animation.js");
 
 const fs = require("fs");
 
@@ -25,7 +24,6 @@ let inventory = ["grass", "dirt", "stone"];
 let inventoryMaxDisplayedSlots = 9;
 
 let localPlayer;
-let playerAnim;
 
 let worldBackground;
 
@@ -76,10 +74,6 @@ function preload () {
     //Load the texture map for our blocks
     Blocks.loadTextureMap("res/textures/blocks.png");
     
-    playerAnim = Animation.fromJsonString(
-        fs.readFileSync("res/animations/player.json")
-    );
-
     worldBackground = loadImage("res/textures/seamless_forest_night_01.png");
 }
 
@@ -88,7 +82,6 @@ window.preload = preload;
 function setup () {
     window.frameRate(60);
     localPlayer = new Player();
-    localPlayer.animation = playerAnim;
     window.localPlayer = localPlayer;
 
     cam = new Camera();
@@ -204,22 +197,19 @@ function setup () {
     document.addEventListener("keydown", (evt)=> {
         if (localPlayer.okayToAnimate && Input.isPressed(evt.key)) return;
         if (evt.keyCode == 68) {
-            localPlayer.animationController.setPlaying(true);
-            localPlayer.animationController.setPlayingClip("walkRight");
+            
         } else if (evt.keyCode === 65) {
-            localPlayer.animationController.setPlaying(true);
-            localPlayer.animationController.setPlayingClip("walkLeft");
+            
         }
         //console.log(evt.keyCode);
         if (evt.keyCode === 83) {
-            localPlayer.animationController.setPlaying(true);
-            localPlayer.animationController.setPlayingClip("crouch");
+            
         }
     });
 
     document.addEventListener("keyup", (evt)=> {
         if (evt.keyCode === 68 || evt.keyCode === 65 || evt.keyCode === 83) {
-            localPlayer.animationController.setPlaying(false);
+            
         }
     });
 

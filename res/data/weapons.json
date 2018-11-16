@@ -1,0 +1,73 @@
+{
+    "bow":{
+        "type":"launcher",
+        "display":{
+            "name":"Bow",
+            "desc":"William Tell would be jealous",
+            "uvs":[16, 0, 16, 32]
+        }
+    },
+    "ballon":{
+        "type":"grenade",
+        "display":{
+            "name":"Ballon Bomb",
+            "desc":"Definitely not helium"
+        }
+    },
+    "tire":{
+        "type":"grenade",
+        "display":{
+            "name":"Tire",
+            "desc":"So that's where my spare went!"
+        }
+    },
+    "pistol":{
+        "type":"launcher",
+        "display":{
+            "name":"Pistol",
+            "desc":"The Great Equalizer"
+        }
+    },
+    "pistol2":{
+        "type":"launcher",
+        "display":{
+            "name":"Supressed Pistol",
+            "desc":"Not actually silent"
+        }
+    },
+    "cutlass":{
+        "type":"melee",
+        "display":{
+            "name":"Cutlass",
+            "desc":"ARR, I be outa powder!"
+        }
+    },
+    "book":{
+        "type":"grenade",
+        "display":{
+            "name":"Book",
+            "desc":"Throw the book at em!"
+        }
+    },
+    "star":{
+        "type":"grenade",
+        "display": {
+            "name":"Throwing Star",
+            "desc":"The noob's throwing knife"
+        }
+    },
+    "rifle2":{
+        "type":"launcher",
+        "display":{
+            "name":"Paintball gun",
+            "desc":"Free paint job"
+        }
+    },
+    "fire":{
+        "type":"grenade",
+        "display":{
+            "name":"Fire",
+            "desc":"YOU are the flame thrower"
+        }
+    }
+}
